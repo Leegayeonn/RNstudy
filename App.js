@@ -16,12 +16,20 @@ export default function App() {
 
   // 버튼을 누르면 할 일 목록을 추가하는 함수
   const addGoalHandler = (enteredGoalText) => {
-    // useState setter 메서드의 스냅샷 방식
-    // 콜백 함수의 매개값은 해당 상태 변수의 최신 값이
+    if (enteredGoalText === '') {
+      alert('할일을 입력하세요!');
+      return;
+    }
     setTodoGoals((currentTodoGoals) => [
       ...currentTodoGoals,
-      { text: enteredGoalText, key: Math.random().toString() },
+      { text: enteredGoalText, id: Math.random().toString() },
     ]);
+  };
+
+  const deleteGoalHandler = (id) => {
+    setTodoGoals((currentTodoGoals) => {
+      return currentTodoGoals.filter((goal) => goal.id !== id);
+    });
   };
 
   return (
@@ -38,10 +46,16 @@ export default function App() {
         <FlatList
           data={todoGoals}
           renderItem={(itemData) => {
-            return <GoalItem text={itemData.item.text} />;
+            return (
+              <GoalItem
+                text={itemData.item.text}
+                id={itemData.item.id}
+                onDelete={deleteGoalHandler}
+              />
+            );
           }}
           keyExtractor={(item, index) => {
-            return item.key;
+            return item.id;
           }}
         ></FlatList>
       </View>
