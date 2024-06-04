@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import GoalItem from './components/GoalItem';
 import GoalInput from './components/GoalInput';
+import { StatusBar } from 'expo-status-bar';
 
 export default function App() {
   // 모달의 렌더링 상태를 나타내는 변수
@@ -47,44 +48,50 @@ export default function App() {
   };
 
   return (
-    <View style={styles.appContainer}>
-      <Button
-        title='할 일 추가하려면 누르세요!'
-        color='#5e0acc'
-        onPress={startAddGoalHandler}
-      />
-      {/* modalIsVisible && 를 직접 구현할 필요 없음. */}
-      <GoalInput
-        visible={modalIsVisible}
-        onAddGoal={addGoalHandler}
-        onCancel={endAddGoalHandler}
-      />
+    <>
+      <StatusBar style='auto' />
+      <View style={styles.appContainer}>
+        <View>
+          <Text style={styles.goalsTitle}>할 일 List</Text>
+        </View>
+        <Button
+          title='할 일 추가하려면 누르세요!'
+          color='#DB7093'
+          onPress={startAddGoalHandler}
+        />
+        {/* modalIsVisible && 를 직접 구현할 필요 없음. */}
+        <GoalInput
+          visible={modalIsVisible}
+          onAddGoal={addGoalHandler}
+          onCancel={endAddGoalHandler}
+        />
 
-      <View style={styles.goalsContainer}>
-        {/*
+        <View style={styles.goalsContainer}>
+          {/*
           ScrollView는 전체 화면이 렌더링 될 때 안에 항목들을 전부 렌더링 합니다.
           이로 인해 성능 상의 저하가 나타날 수 있습니다.
           (보이지 않는 영역까지 렌더링을 진행하기 때문에 목록이 많다면 로딩이 길어짐.)
           FlatList는 보이는 영역만 일단 렌더링을 진행하고, 나머지 항목들은
           스크롤 움직임이 발생하면 그때 그때 렌더링을 진행합니다.
       */}
-        <FlatList
-          data={todoGoals}
-          renderItem={(itemData) => {
-            return (
-              <GoalItem
-                text={itemData.item.text}
-                id={itemData.item.id}
-                onDelete={deleteGoalHandler}
-              />
-            );
-          }}
-          keyExtractor={(item, index) => {
-            return item.id;
-          }}
-        ></FlatList>
+          <FlatList
+            data={todoGoals}
+            renderItem={(itemData) => {
+              return (
+                <GoalItem
+                  text={itemData.item.text}
+                  id={itemData.item.id}
+                  onDelete={deleteGoalHandler}
+                />
+              );
+            }}
+            keyExtractor={(item, index) => {
+              return item.id;
+            }}
+          ></FlatList>
+        </View>
       </View>
-    </View>
+    </>
   );
 }
 
@@ -94,8 +101,14 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     paddingHorizontal: 16, // 수평으로
   },
-
   goalsContainer: {
     flex: 4,
+  },
+  goalsTitle: {
+    fontSize: 30,
+    textAlign: 'center',
+    color: '#DB7093',
+    marginBottom: 10,
+    paddingBottom: 8,
   },
 });
