@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Button, Modal, StyleSheet, Text, TextInput, View } from 'react-native';
 
-const GoalInput = ({ onAddGoal }) => {
+const GoalInput = ({ visible, onAddGoal, onCancel }) => {
   // 입력창의 상태를 관리하는 변수를 React에서 사용하는 useState 훅을 활용하여 선언.
   const [enteredGoalText, setEnteredGoalText] = useState('');
 
@@ -16,57 +16,63 @@ const GoalInput = ({ onAddGoal }) => {
   };
 
   return (
-    <>
-      <Text
-        style={{
-          textAlign: 'center',
-          fontSize: 30,
-          marginTop: 20,
-        }}
-      >
-        **** 군범이의 할일 ****
-      </Text>
-
+    // 조건부 렌더링을 직접 구현하지 않고 Modal의 visible props를 활용해서 모달을 열고 닫을 수 있음.
+    <Modal visible={visible} animationType='slide'>
       <View style={styles.inputContainer}>
+        <Text style={styles.title}>**** 군범이의 할일 ****</Text>
         <TextInput
-          placeholder='할 일을 입력하세요'
           style={styles.textInput}
+          placeholder='할 일을 입력하세요'
           onChangeText={goalInputHandler}
           value={enteredGoalText}
         />
-        <Button title='할 일 추가하기' onPress={addGoalHandler} />
+        <View style={styles.buttonContainer}>
+          <View style={styles.button}>
+            <Button
+              title='할 일 추가하기'
+              onPress={addGoalHandler}
+              color='#b180f0'
+            />
+          </View>
+          <View style={styles.button}>
+            <Button title='취소' color='#f31282' onPress={onCancel} />
+          </View>
+        </View>
       </View>
-      <View>
-        <Text style={styles.goalsTitle}>할 일 List</Text>
-      </View>
-    </>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  inputContainer: {
-    flex: 1,
-    flexDirection: 'row', // 가로배치
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 24,
-    borderBottomWidth: 1,
-    borderBottomColor: '#cccccc',
-  },
-  goalsTitle: {
-    fontSize: 30,
+  title: {
     textAlign: 'center',
-    color: 'orangered',
-    marginBottom: 10,
-    paddingBottom: 8,
-    backgroundColor: '	#FA8072',
+    fontSize: 30,
+    color: '#8B008B',
+    marginBottom: 40,
+  },
+  inputContainer: {
+    flex: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#FFF0F5',
   },
   textInput: {
     borderWidth: 1,
-    borderColor: '#cccccc',
-    width: '70%',
-    marginRight: 8,
-    padding: 8,
+    borderColor: 'black',
+    backgroundColor: '#FFFACD',
+    color: '#120438',
+    borderRadius: 6,
+    width: '90%',
+    padding: 10,
+  },
+  buttonContainer: {
+    marginTop: 16,
+    flexDirection: 'row',
+  },
+  button: {
+    width: '30%',
+    marginHorizontal: 8,
   },
 });
 
